@@ -1,0 +1,363 @@
+void ultrasonido(){
+  digitalWrite(Pin_trig,0);
+  delayMicroseconds(2);
+  digitalWrite(Pin_trig, 1);
+  delayMicroseconds(10);
+  digitalWrite(Pin_trig, 0);
+  int duracion = pulseIn(Pin_echo,1);
+  cm = duracion / 29 / 2;
+  Serial.println("pase ultrasonido");
+  if(cm==2){
+    salida();
+  }
+}
+void salida(){
+  analogWrite(velocidad,127);
+  digitalWrite(adelante_D,0);
+  digitalWrite(adelante_I,0);
+  digitalWrite(atras_D,1);
+  digitalWrite(atras_I,1);
+  ultrasonido();
+  if(cm>=4){
+    analogWrite(velocidad,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    ultrasonido();
+    xv=cm;
+    delay(500);
+    analogWrite(velocidad,127);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(adelante_D,1);
+    digitalWrite(atras_I,1);
+    delay(500);
+    analogWrite(velocidad,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    ultrasonido();
+    lv=cm;  
+    analogWrite(velocidad,127);
+    digitalWrite(adelante_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_I,1);
+    digitalWrite(atras_D,1);
+    delay(800);
+    analogWrite(velocidad,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    ultrasonido();
+    rv=cm;
+    razon();
+  } 
+} 
+void razon(){
+  int maximo1;
+  int maximo2;
+  int maximo;
+  maximo1=max(xv,rv);
+  maximo2=max(maximo1,lv);
+  maximo=max(maximo1,maximo2);
+  vv=maximo;
+  if(vv==rv){
+    analogWrite(velocidad,spy);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,1);
+    digitalWrite(adelante_I,1);
+  }
+  if(vv==lv){              // aqui tienes k ajustar los movimiento con el tiempo 
+    //gira izquierda
+    analogWrite(velocidad,spy);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(adelante_D,1);
+    digitalWrite(atras_I,1);
+    delay(800);
+  }
+  if(vv==xv){
+    //gira al frente
+    analogWrite(velocidad,spy);
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(adelante_D,1);
+    digitalWrite(atras_I,1);
+    delay(500);
+  }
+}//###############################
+void movimiento(){
+  Serial.println("pase enfrente1");
+  seguimientoF();
+  ultrasonido();
+}
+void movimiento1(){
+  seguimientoR();
+  ultrasonido(); 
+  Serial.println("pase derecha1");
+}
+void movimiento2(){
+  seguimientoL();
+  ultrasonido();
+  Serial.println("pase izquierda1");
+
+}
+void seguimientoF(){  
+  Serial.println("pase enfrente2");
+  RTC.readClock();
+  delay(80);
+  minuto=RTC.getMinutes();
+  segundo=RTC.getSeconds();
+  minuto_ = int(minuto);
+  segundo_=int(segundo);
+  minuto_=(minuto_+segundo_);
+  if(addr<=10){
+    w=1;
+    addr=(addr+1);
+    EEPROM.write(addr,  w);        
+    addr=(addr+1);
+    EEPROM.write(addr,  minuto_);   
+    delay(80);
+  }
+}
+void seguimientoR(){ 
+  Serial.println("pase derecha2");
+  RTC.readClock();
+  delay(80);
+  minuto=RTC.getMinutes();
+  segundo=RTC.getSeconds();
+  minuto_ = int(minuto);
+  segundo_=int(segundo);
+  minuto_=(minuto_+segundo_);
+  if(addr<=10){
+    w=2;
+    addr=(addr+1);
+    EEPROM.write(addr,  w);
+    addr=(addr+1);
+    EEPROM.write(addr,  minuto_);   
+    delay(80);
+  }
+}
+void seguimientoL(){
+  Serial.println("pase izquierda2");
+  RTC.readClock();
+  delay(80);
+  minuto=RTC.getMinutes();
+  segundo=RTC.getSeconds();
+  minuto_ = int(minuto);
+  segundo_=int(segundo);
+  minuto_=(minuto_+segundo_);
+  if(addr<=10){
+    w=3;
+    addr=(addr+1);
+    EEPROM.write(addr,  w);
+    addr=(addr+1);
+    EEPROM.write(addr,  minuto_);   
+    delay(80);
+  }
+}
+void calculo(){                 
+  cordenada=EEPROM.read(addr);      
+  delay(80);
+  addr=(addr-1);
+  f=EEPROM.read(addr);                   
+  delay(80);
+  addr=(addr-1);
+  cordenada1=EEPROM.read(addr);      
+  delay(80);
+  if(f==1){                           
+    d=(cordenada-cordenada1); 
+    d=(d*1000);
+    if(d>=9999||d<=-9999){
+      d=(d/10);
+    }
+    d=(+d);
+    analogWrite(velocidad,spy);
+    digitalWrite(adelante_D,0);//atras
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,1);
+    digitalWrite(atras_I,1);
+    delay(d);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+  }
+  if(f==2){
+    d=(cordenada-cordenada1); 
+    d=(d*1000);
+    if(d>=9999||d<=-9999){
+      d=(d/10);
+    }
+    d=(+d);
+    analogWrite(velocidad,spy);//derechara
+    digitalWrite(adelante_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_I,1);
+    digitalWrite(atras_D,1);
+    delay(d);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+  }
+  if(f==3){
+    d=(cordenada-cordenada1); 
+    d=(d*1000);
+    if(d>=9999||d<=-9999){
+      d=(d/10);
+    }
+    d=(+d);
+    analogWrite(velocidad,spy);//izquierda
+    digitalWrite(adelante_I,0);
+    digitalWrite(atras_D,0);
+    digitalWrite(adelante_D,1);
+    digitalWrite(atras_I,1);
+    delay(d);  
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
+  }
+  d=0;
+  f=0;
+  cordenada=0;
+  cordenada1=cordenada1;        
+  while(addr>=0){
+    addr=(addr-1);             
+    f=EEPROM.read(addr);      
+    delay(80);
+    addr=(addr-1);
+    cordenada=EEPROM.read(addr);                     
+    delay(80);
+    if(f==1){                         
+      d=(cordenada1-cordenada); 
+      d=(d*1000);
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);
+      digitalWrite(adelante_D,0);//atras
+      digitalWrite(adelante_I,0);
+      digitalWrite(atras_D,1);
+      digitalWrite(atras_I,1);
+      delay(d);
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    if(f==2){
+      d=(cordenada1-cordenada); 
+      d=(d*1000);
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);//derechara
+      digitalWrite(adelante_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_I,1);
+      digitalWrite(atras_D,1);
+      delay(d);
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    if(f==3){
+      d=(cordenada1-cordenada); 
+      d=(d*1000);
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);//izquierda
+      digitalWrite(adelante_I,0);
+      digitalWrite(atras_D,0);
+      digitalWrite(adelante_D,1);
+      digitalWrite(atras_I,1);
+      delay(d);  
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    d=0;
+    f=0;
+    cordenada1=0;
+    cordenada=cordenada;                 
+    addr=(addr-1);                
+    f=EEPROM.read(addr);      
+    delay(80);
+    addr=(addr-1);
+    cordenada1=EEPROM.read(addr);                     
+    delay(80);
+    if(f==1){                           
+      d=(cordenada-cordenada1); 
+      d=(d*1000);
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);
+      digitalWrite(adelante_D,0);//atras
+      digitalWrite(adelante_I,0);
+      digitalWrite(atras_D,1);
+      digitalWrite(atras_I,1);
+      delay(d);
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    if(f==2){
+      d=(cordenada-cordenada1); 
+      d=(d*1000);
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);//derechara
+      digitalWrite(adelante_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_I,1);
+      digitalWrite(atras_D,1);
+      delay(d);
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    if(f==3){
+      d=(cordenada-cordenada1); 
+      d=(d*1000);
+
+      if(d>=9999||d<=-9999){
+        d=(d/10);
+      }
+      d=(+d);
+      analogWrite(velocidad,spy);//izquierda
+      digitalWrite(adelante_I,0);
+      digitalWrite(atras_D,0);
+      digitalWrite(adelante_D,1);
+      digitalWrite(atras_I,1);
+      delay(d);  
+      digitalWrite(atras_D,0);
+      digitalWrite(atras_I,0);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+    }
+    d=0;
+    f=0;
+    cordenada=0;
+    cordenada1=cordenada1;              
+  }
+  Serial.println("pase homy vuelta a casa ");
+}
+
