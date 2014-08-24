@@ -59,14 +59,14 @@ void control(){
     Serial.println("pase S toma dato");
     break;
   case 'W'://homi casa calculos de trayectoria luces frontal
-    while(x<1){
+    while(x<=1){
       calculo();
       x++;   
       y=0;
     }
     break;   
   case 'U'://borrar memoria para nuevo recorido 
-    while(y<1){
+    while(y<=1){
       for ( addr = 0; addr <=15; addr++){
         EEPROM.write(addr, 0);
       } 
