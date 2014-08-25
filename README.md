@@ -19,7 +19,7 @@ rectificador puente diodo motores
 2 motores Dc  9v
 piezas 3D print los siguiente enlaces se irán actualizando según se termine el diseño 
 http://www.thingiverse.com/thing:2820
-*****por actualizar
+https://www.youtube.com/watch?v=7bn4RZi4djo&feature=youtu.be*****por actualizar
 diagrama montaje link
 https://www.facebook.com/newlinerobotic
 
