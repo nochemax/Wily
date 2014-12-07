@@ -22,7 +22,7 @@ http://www.thingiverse.com/thing:2820
 https://www.youtube.com/watch?v=7bn4RZi4djo&feature=youtu.be*****por actualizar
 diagrama montaje link
 https://www.facebook.com/newlinerobotic
-
+piezas 3D print http://www.thingiverse.com/thing:582192
 software 
 programación C
 
