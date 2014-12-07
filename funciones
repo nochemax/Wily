@@ -4,58 +4,88 @@ void ultrasonido(){
   digitalWrite(Pin_trig, 1);
   delayMicroseconds(10);
   digitalWrite(Pin_trig, 0);
-  int duracion = pulseIn(Pin_echo,1);
+  duracion = pulseIn(Pin_echo,1);
   cm = duracion / 29 / 2;
-  Serial.println("pase ultrasonido");
-  if(cm==2){
-    salida();
+  if(cm<=2.00){
+    digitalWrite(Pin_trig,0);
+    delayMicroseconds(2);
+    digitalWrite(Pin_trig, 1);
+    delayMicroseconds(10);
+    digitalWrite(Pin_trig, 0);
+    duracion = pulseIn(Pin_echo,1);
+    cm = duracion / 29 / 2;
+    //escaneo de la zona
+    if(cm<=2.00){ 
+      analogWrite(velocidad,160);
+      digitalWrite(adelante_D,0);
+      digitalWrite(adelante_I,0);
+      digitalWrite(atras_D,1);
+      digitalWrite(atras_I,1);
+      digitalWrite(Pin_trig,0);
+      delay(1000);
+      delayMicroseconds(2);
+      digitalWrite(Pin_trig, 1);
+      delayMicroseconds(10);
+      digitalWrite(Pin_trig, 0);
+      duracion = pulseIn(Pin_echo,1);
+      cm = duracion / 29 / 2;
+      if(cm>=4){
+        analogWrite(velocidad,0);
+        digitalWrite(adelante_D,0);
+        digitalWrite(adelante_I,0);
+        digitalWrite(atras_D,0);
+        digitalWrite(atras_I,0);
+        digitalWrite(Pin_trig,0);      
+        delayMicroseconds(2);
+        digitalWrite(Pin_trig, 1);
+        delayMicroseconds(10);
+        digitalWrite(Pin_trig, 0);
+        duracion = pulseIn(Pin_echo,1);
+        cm = duracion / 29 / 2;
+        xv=cm;
+        analogWrite(velocidad,160);
+        digitalWrite(adelante_I,0);
+        digitalWrite(atras_D,0);
+        digitalWrite(adelante_D,1);
+        digitalWrite(atras_I,1);
+        delay(1500);
+        analogWrite(velocidad,0);
+        digitalWrite(adelante_D,0);
+        digitalWrite(adelante_I,0);
+        digitalWrite(atras_D,0);
+        digitalWrite(atras_I,0);
+        digitalWrite(Pin_trig,0);
+        delayMicroseconds(2);
+        digitalWrite(Pin_trig, 1);
+        delayMicroseconds(10);
+        digitalWrite(Pin_trig, 0);
+        duracion = pulseIn(Pin_echo,1);
+        cm = duracion / 29 / 2;
+        lv=cm;  
+        analogWrite(velocidad,160);
+        digitalWrite(adelante_D,0);
+        digitalWrite(atras_I,0);
+        digitalWrite(adelante_I,1);
+        digitalWrite(atras_D,1);
+        delay(2500);
+        analogWrite(velocidad,0);
+        digitalWrite(adelante_D,0);
+        digitalWrite(adelante_I,0);
+        digitalWrite(atras_D,0);
+        digitalWrite(atras_I,0);
+        digitalWrite(Pin_trig,0);
+        delayMicroseconds(2);
+        digitalWrite(Pin_trig, 1);
+        delayMicroseconds(10);
+        digitalWrite(Pin_trig, 0);
+        duracion = pulseIn(Pin_echo,1);
+        cm = duracion / 29 / 2;
+        rv=cm;
+        razon();
+      }
+    }
   }
 }
-void salida(){
-  analogWrite(velocidad,127);
-  digitalWrite(adelante_D,0);
-  digitalWrite(adelante_I,0);
-  digitalWrite(atras_D,1);
-  digitalWrite(atras_I,1);
-  ultrasonido();
-  if(cm>=4){
-    analogWrite(velocidad,0);
-    digitalWrite(adelante_D,0);
-    digitalWrite(adelante_I,0);
-    digitalWrite(atras_D,0);
-    digitalWrite(atras_I,0);
-    ultrasonido();
-    xv=cm;
-    delay(500);
-    analogWrite(velocidad,127);
-    digitalWrite(adelante_I,0);
-    digitalWrite(atras_D,0);
-    digitalWrite(adelante_D,1);
-    digitalWrite(atras_I,1);
-    delay(500);
-    analogWrite(velocidad,0);
-    digitalWrite(adelante_D,0);
-    digitalWrite(adelante_I,0);
-    digitalWrite(atras_D,0);
-    digitalWrite(atras_I,0);
-    ultrasonido();
-    lv=cm;  
-    analogWrite(velocidad,127);
-    digitalWrite(adelante_D,0);
-    digitalWrite(atras_I,0);
-    digitalWrite(adelante_I,1);
-    digitalWrite(atras_D,1);
-    delay(800);
-    analogWrite(velocidad,0);
-    digitalWrite(adelante_D,0);
-    digitalWrite(adelante_I,0);
-    digitalWrite(atras_D,0);
-    digitalWrite(atras_I,0);
-    ultrasonido();
-    rv=cm;
-    razon();
-  } 
-} 
 void razon(){
   int maximo1;
   int maximo2;
@@ -70,6 +100,11 @@ void razon(){
     digitalWrite(atras_I,0);
     digitalWrite(adelante_D,1);
     digitalWrite(adelante_I,1);
+    delay(1000);  
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
   }
   if(vv==lv){              // aqui tienes k ajustar los movimiento con el tiempo 
     //gira izquierda
@@ -78,7 +113,11 @@ void razon(){
     digitalWrite(atras_D,0);
     digitalWrite(adelante_D,1);
     digitalWrite(atras_I,1);
-    delay(800);
+    delay(2500);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
   }
   if(vv==xv){
     //gira al frente
@@ -87,27 +126,15 @@ void razon(){
     digitalWrite(atras_D,0);
     digitalWrite(adelante_D,1);
     digitalWrite(atras_I,1);
-    delay(500);
+    delay(1500);
+    digitalWrite(atras_D,0);
+    digitalWrite(atras_I,0);
+    digitalWrite(adelante_D,0);
+    digitalWrite(adelante_I,0);
   }
-}//###############################
-void movimiento(){
-  Serial.println("pase enfrente1");
-  seguimientoF();
-  ultrasonido();
 }
-void movimiento1(){
-  seguimientoR();
-  ultrasonido(); 
-  Serial.println("pase derecha1");
-}
-void movimiento2(){
-  seguimientoL();
-  ultrasonido();
-  Serial.println("pase izquierda1");
 
-}
 void seguimientoF(){  
-  Serial.println("pase enfrente2");
   RTC.readClock();
   delay(80);
   minuto=RTC.getMinutes();
@@ -125,7 +152,6 @@ void seguimientoF(){
   }
 }
 void seguimientoR(){ 
-  Serial.println("pase derecha2");
   RTC.readClock();
   delay(80);
   minuto=RTC.getMinutes();
@@ -143,7 +169,6 @@ void seguimientoR(){
   }
 }
 void seguimientoL(){
-  Serial.println("pase izquierda2");
   RTC.readClock();
   delay(80);
   minuto=RTC.getMinutes();
@@ -160,6 +185,8 @@ void seguimientoL(){
     delay(80);
   }
 }
+
+
 void calculo(){                 
   cordenada=EEPROM.read(addr);      
   delay(80);
@@ -358,6 +385,4 @@ void calculo(){
     cordenada=0;
     cordenada1=cordenada1;              
   }
-  Serial.println("pase homy vuelta a casa ");
 }
-
