@@ -5,6 +5,10 @@ MiniBot Wily v0.1
 
 Wily minibot. Esta inspirado en el uso de razón básica humana; noción del tiempo, memoria y percepción sobre el entorno, dando le a si  unas características especiales, como saber que dirección a tomado y que tiempo lo ha recorrido, aparte de ir recopilando mas información en la memoria. 
 
+
+pruebas: 
+https://www.youtube.com/watch?v=4tj0bqFjCm4&feature=youtu.be
+
 hardware :
 
 Arduino nano v3.0
